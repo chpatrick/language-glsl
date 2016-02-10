@@ -1,4 +1,8 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 module Language.GLSL.Syntax where
+
+import Data.Data
 
 -- TODO:
 -- - add support for 'array of strings' ?
@@ -32,14 +36,14 @@ module Language.GLSL.Syntax where
 ----------------------------------------------------------------------
 
 data TranslationUnit = TranslationUnit [ExternalDeclaration] -- at least one
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data ExternalDeclaration =
     -- function declarations should be at top level (page 28)
     FunctionDeclaration FunctionPrototype
   | FunctionDefinition FunctionPrototype Compound
   | Declaration Declaration
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 -- TODO clean
 data Declaration =
@@ -51,28 +55,28 @@ data Declaration =
   | Block TypeQualifier String [Field] (Maybe (String, Maybe (Maybe Expr))) -- constant expression
 -- e.g. layout (origin_upper_left) in; TODO check if it is only used for default layout.
   | TQ TypeQualifier
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 -- TODO regroup String (Maybe (Maybe Expr)) as Declarator and use it for
 -- StructDeclarator.
 data InitDeclarator = InitDecl String (Maybe (Maybe Expr)) (Maybe Expr) -- constant expression; assignment expression
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data InvariantOrType = InvariantDeclarator | TypeDeclarator FullType
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data FunctionPrototype = FuncProt FullType String [ParameterDeclaration]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data ParameterDeclaration =
   ParameterDeclaration (Maybe ParameterTypeQualifier)
                        (Maybe ParameterQualifier)
                        TypeSpecifier
                        (Maybe (String, Maybe Expr)) -- constant expression
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data FullType = FullType (Maybe TypeQualifier) TypeSpecifier
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 -- sto
 -- lay [sto]
@@ -85,25 +89,25 @@ data TypeQualifier =
   | TypeQualInt InterpolationQualifier (Maybe StorageQualifier)
   | TypeQualInv InvariantQualifier (Maybe StorageQualifier)
   | TypeQualInv3 InvariantQualifier InterpolationQualifier StorageQualifier
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data TypeSpecifier = TypeSpec (Maybe PrecisionQualifier) TypeSpecifierNoPrecision
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data InvariantQualifier = Invariant
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data InterpolationQualifier =
     Smooth
   | Flat
   | NoPerspective
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data LayoutQualifier = Layout [LayoutQualifierId]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data LayoutQualifierId = LayoutQualId String (Maybe Expr) -- TODO Expr should be IntConstant
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data Statement =
   -- declaration statement
@@ -127,18 +131,18 @@ data Statement =
   | DoWhile Statement Expr
   | For (Either (Maybe Expr) Declaration) (Maybe Condition) (Maybe Expr) Statement
     -- 1st stmt: expression or declaration, 2nd: no new scope
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data Compound = Compound [Statement]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data Condition =
     Condition Expr
   | InitializedCondition FullType String Expr -- assignment expression
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data CaseLabel = Case Expr | Default
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data StorageQualifier =
     Const
@@ -150,10 +154,10 @@ data StorageQualifier =
   | CentroidIn
   | CentroidOut
   | Uniform
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data TypeSpecifierNoPrecision = TypeSpecNoPrecision TypeSpecifierNonArray (Maybe (Maybe Expr)) -- constant expression
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data TypeSpecifierNonArray =
     Void
@@ -223,18 +227,18 @@ data TypeSpecifierNonArray =
   | USampler2DMSArray
   | StructSpecifier (Maybe String) [Field]
   | TypeName String -- TODO user-defined type, should verify if it is declared
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data PrecisionQualifier = HighP | MediumP | LowP
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 -- TODO The type qualifier can be present only when there is one or more declarators.
 -- There other restrictions, see 4.1.8.
 data Field = Field (Maybe TypeQualifier) TypeSpecifier [StructDeclarator]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data StructDeclarator = StructDeclarator String (Maybe (Maybe Expr)) -- constant expression
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data Expr =
   -- primaryExpression
@@ -290,24 +294,24 @@ data Expr =
   | OrAssign Expr Expr
   -- sequence
   | Sequence Expr Expr
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data IntConstantKind = Hexadecimal | Octal | Decimal
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data Parameters = ParamVoid | Params [Expr]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data ParameterQualifier = InParameter | OutParameter | InOutParameter
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data ParameterTypeQualifier = ConstParameter
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
 data FunctionIdentifier =
     -- TODO could be refine (I think a precision qualifier is not permitted,
     -- nor a complete struct definition)
     FuncIdTypeSpec TypeSpecifier
   | FuncId String
-  deriving (Show, Eq)
+  deriving (Show, Eq, Data)
 
