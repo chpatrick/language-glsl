@@ -23,7 +23,7 @@ source-repository head
 library
   build-depends:       base < 5,
                        parsec,
-                       prettyclass
+                       pretty
   ghc-options:         -Wall
   exposed-modules:     Language.GLSL,
                        Language.GLSL.Parser,
@@ -36,7 +36,7 @@ executable glsl-pprint
   build-depends:       base < 5,
                        language-glsl,
                        parsec,
-                       prettyclass
+                       pretty
   ghc-options:         -Wall
 
 Test-Suite tests
@@ -45,7 +45,7 @@ Test-Suite tests
                    HUnit,
                    language-glsl,
                    parsec,
-                   prettyclass,
+                   pretty,
                    test-framework,
                    test-framework-hunit
   ghc-options:     -Wall
