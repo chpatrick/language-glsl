@@ -516,7 +516,9 @@ parameterQualifier :: P ParameterQualifier
 parameterQualifier = choice
   -- "empty" case handled in the caller
   [ (try . lexeme . string) "inout" >> return InOutParameter
-  , (try . lexeme . string) "in" >> return InParameter
+  -- We need to make sure that there is a blank after in,
+  -- otherwise it will parse "int" as "in t".
+  , try (lexeme (string "in" >> blank)) >> return InParameter
   , (try . lexeme . string) "out" >> return OutParameter
   ]
 
