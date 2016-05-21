@@ -24,7 +24,7 @@ library
   build-depends:       base < 5,
                        parsec,
                        pretty
-  ghc-options:         -Wall
+  ghc-options:         -Wall -Werror
   exposed-modules:     Language.GLSL,
                        Language.GLSL.Parser,
                        Language.GLSL.Pretty,
