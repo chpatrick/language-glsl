@@ -1,8 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 module Language.GLSL.Pretty where
 
 import Text.PrettyPrint.HughesPJClass
 import Text.Printf
+import Prelude hiding ((<>))
 
 import Language.GLSL.Syntax
 
